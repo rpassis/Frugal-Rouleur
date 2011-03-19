@@ -75,6 +75,16 @@ get '/json/:site/:term/:number' do
 		# Parse the doc into Nokogiri
 		doc = Nokogiri::HTML(open("http://www.wiggle.co.uk/?s=" + params[:term]))
 		
+		# Loop through the number of items we want returned creating a little JSON object for each
+		for i in 1..params[:number].to_i do
+			results += "{"
+			results += "\"name\": \"" + doc.css(".categoryListItem:nth-child(#{i}) h2 a")[0].content + "\","
+			results += "\"price\": \"" + doc.css(".categoryListItem:nth-child(#{i}) .youpay strong")[0].content.gsub(/£/, '') + "\","
+			results += "\"url\": \"" + doc.css(".categoryListItem:nth-child(#{i}) h2 a")[0].attribute("href").value + "\","
+			results += "\"image\": \"" + doc.css(".categoryListItem:nth-child(#{i}) .productimage img")[0].attribute("src").value + "\""
+			results += "},"
+		end	
+		
 	elsif params[:site] == "ProBikeKit" then
 		
 		# Parse the doc into Nokogiri
