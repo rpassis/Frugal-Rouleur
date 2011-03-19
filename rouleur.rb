@@ -52,11 +52,14 @@ get '/json/:site/:term/:number' do
 	# New JSON object for holding the results
 	results = "["
 	
+	# Multi-word search term parsing
+	search = params[:term].gsub(/\s/, "+")
+	
 	# Different rules for parsing the returned doc depending on the site
 	if params[:site] == "Chain Reaction" then
-		
+
 		# Parse the doc into Nokogiri
-		doc = Nokogiri::HTML(open("http://www.chainreactioncycles.com/SearchResults.aspx?Search=" + params[:term]))
+		doc = Nokogiri::HTML(open("http://www.chainreactioncycles.com/SearchResults.aspx?Search=" + search))
 		
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do
@@ -71,7 +74,7 @@ get '/json/:site/:term/:number' do
 	elsif params[:site] == "Wiggle" then
 		
 		# Parse the doc into Nokogiri
-		doc = Nokogiri::HTML(open("http://www.wiggle.co.uk/?s=" + params[:term]))
+		doc = Nokogiri::HTML(open("http://www.wiggle.co.uk/?s=" + search))
 		
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do
@@ -86,7 +89,7 @@ get '/json/:site/:term/:number' do
 	elsif params[:site] == "ProBikeKit" then
 		
 		# Parse the doc into Nokogiri
-		doc = Nokogiri::HTML(open("http://www.probikekit.com/advsearch.php?AQUERY=" + params[:term]))
+		doc = Nokogiri::HTML(open("http://www.probikekit.com/advsearch.php?AQUERY=" + search))
 		
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do
@@ -100,8 +103,11 @@ get '/json/:site/:term/:number' do
 		
 	elsif params[:site] == "Ribble Cycles" then
 		
+		# Multi-word search term parsing
+		search.gsub!(/\+/, "%20")
+		
 		# Parse the doc into Nokogiri
-		doc = Nokogiri::HTML(open("http://www.ribblecycles.co.uk/product/t/" + params[:term]))
+		doc = Nokogiri::HTML(open("http://www.ribblecycles.co.uk/product/t/" + search))
 		
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do
