@@ -52,8 +52,6 @@ get '/json/:site/:term/:number' do
 	# New JSON object for holding the results
 	results = "["
 	
-	
-	
 	# Different rules for parsing the returned doc depending on the site
 	if params[:site] == "Chain Reaction" then
 		
@@ -100,16 +98,23 @@ get '/json/:site/:term/:number' do
 			results += "},"
 		end	
 		
-	elsif params[:site] == "Ribble+Cycles" then
+	elsif params[:site] == "Ribble Cycles" then
 		
 		# Parse the doc into Nokogiri
 		doc = Nokogiri::HTML(open("http://www.ribblecycles.co.uk/product/t/" + params[:term]))
 		
+		# Loop through the number of items we want returned creating a little JSON object for each
+		for i in 1..params[:number].to_i do
+			results += "{"
+			results += "\"name\": \"" + doc.css("#listItemTitle#{i}")[0].content + "\","
+			results += "\"price\": \"" + doc.css(".productListItem:nth-child(#{(i*2)-1}) .price4")[0].content.gsub(/£([0-9]+\.[0-9]+) a saving of [0-9]+\.[0-9]+%/, '\1').strip + "\","
+			results += "\"url\": \"" + doc.css("#listItemTitle#{i}")[0].attribute("href").value + "\","
+			results += "\"image\": \"" + doc.css("#pimage#{i}")[0].attribute("data-src").value + "\""
+			results += "},"
+		end	
+		
 	end
 		
-		
-		
-	
 	# Chop off the last character and close the JSON
 	return results.chop! << "]"
 	
