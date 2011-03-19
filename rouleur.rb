@@ -90,6 +90,16 @@ get '/json/:site/:term/:number' do
 		# Parse the doc into Nokogiri
 		doc = Nokogiri::HTML(open("http://www.probikekit.com/advsearch.php?AQUERY=" + params[:term]))
 		
+		# Loop through the number of items we want returned creating a little JSON object for each
+		for i in 1..params[:number].to_i do
+			results += "{"
+			results += "\"name\": \"" + doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1}) a.PRODLINK")[0].content + "\","
+			results += "\"price\": \"" + doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1}) span.nSmallNowOnly")[0].content.gsub(/Now Only £/, '') + "\","
+			results += "\"url\": \"" + "http://www.probikekit.com/" + doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1}) a.PRODLINK")[0].attribute("href").value + "\","
+			results += "\"image\": \"" + "http://www.probikekit.com/" + doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1}) img")[0].attribute("src").value + "\""
+			results += "},"
+		end	
+		
 	elsif params[:site] == "Ribble+Cycles" then
 		
 		# Parse the doc into Nokogiri
