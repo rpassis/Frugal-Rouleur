@@ -41,7 +41,10 @@ end
 
 
 
-
+currency = open("http://www.google.com/ig/calculator?hl=en&q=100\.43GBP%3D%3FAUD")	
+	australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
+	puts "========================================"
+	puts australian
 
 
 
@@ -68,6 +71,10 @@ get '/json/:site/:term/:number' do
 		for i in 1..params[:number].to_i do
 			# Check that there's some results
 			if (!doc.css("#ModelLink#{i}")[0].nil?) then
+				
+				# Convert the price to AUD
+				
+				
 				results += "{"
 				results += "\"name\": \"" + doc.css("#ModelLink#{i}")[0].attribute("title").value + "\","
 				results += "\"price\": \"" + doc.css("#ModelPrice#{i} .Label11")[0].content.gsub(/Now\302\240\302\243/, '') + "\","
