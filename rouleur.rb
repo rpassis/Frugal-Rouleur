@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'rubygems'
 require 'haml'
 require 'sass'
@@ -41,13 +43,6 @@ end
 
 
 
-currency = open("http://www.google.com/ig/calculator?hl=en&q=100\.43GBP%3D%3FAUD")	
-	australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
-	puts "========================================"
-	puts australian
-
-
-
 # Takes in arguments for site, search term and number of results to return and returns JSON
 # This will be called by JavaScript so that we can progressively show each site's results
 get '/json/:site/:term/:number' do
@@ -73,14 +68,17 @@ get '/json/:site/:term/:number' do
 			if (!doc.css("#ModelLink#{i}")[0].nil?) then
 				
 				# Convert the price to AUD
+				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + doc.css("#ModelPrice#{i} .Label11")[0].content.gsub(/Now\302\240\302\243/, '') + "GBP%3D%3FAUD")	
+				australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
 				
-				
+				# Create object
 				results += "{"
 				results += "\"name\": \"" + doc.css("#ModelLink#{i}")[0].attribute("title").value + "\","
-				results += "\"price\": \"" + doc.css("#ModelPrice#{i} .Label11")[0].content.gsub(/Now\302\240\302\243/, '') + "\","
+				results += "\"price\": \"" + australian.to_s + "\","
 				results += "\"url\": \"" + "http://chainreactioncycles.com" + doc.css("#ModelLink#{i}")[0].attribute("href").value + "\","
 				results += "\"image\": \"" + "http://chainreactioncycles.com" + doc.css("#ModelImageLink#{i} img")[0].attribute("src").value + "\""
 				results += "},"
+				
 			end
 		end
 		
@@ -93,12 +91,19 @@ get '/json/:site/:term/:number' do
 		for i in 1..params[:number].to_i do
 			# Check that there's some results
 			if (!doc.css(".categoryListItem:nth-child(#{i})")[0].nil?) then
+				
+				# Convert the price to AUD
+				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + doc.css(".categoryListItem:nth-child(#{i}) .youpay strong")[0].content.gsub(/£/, '') + "GBP%3D%3FAUD")	
+				australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
+				
+				# Create object
 				results += "{"
 				results += "\"name\": \"" + doc.css(".categoryListItem:nth-child(#{i}) h2 a")[0].content + "\","
-				results += "\"price\": \"" + doc.css(".categoryListItem:nth-child(#{i}) .youpay strong")[0].content.gsub(/£/, '') + "\","
+				results += "\"price\": \"" + australian.to_s + "\","
 				results += "\"url\": \"" + doc.css(".categoryListItem:nth-child(#{i}) h2 a")[0].attribute("href").value + "\","
 				results += "\"image\": \"" + doc.css(".categoryListItem:nth-child(#{i}) .productimage img")[0].attribute("src").value + "\""
 				results += "},"
+				
 			end
 		end	
 		
@@ -111,12 +116,19 @@ get '/json/:site/:term/:number' do
 		for i in 1..params[:number].to_i do
 			# Check that there's some results
 			if (!doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1})")[0].nil?) then
+				
+				# Convert the price to AUD
+				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1}) span.nSmallNowOnly")[0].content.gsub(/Now Only £/, '') + "GBP%3D%3FAUD")	
+				australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
+				
+				# Create object
 				results += "{"
 				results += "\"name\": \"" + doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1}) a.PRODLINK")[0].content + "\","
-				results += "\"price\": \"" + doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1}) span.nSmallNowOnly")[0].content.gsub(/Now Only £/, '') + "\","
+				results += "\"price\": \"" + australian.to_s + "\","
 				results += "\"url\": \"" + "http://www.probikekit.com/" + doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1}) a.PRODLINK")[0].attribute("href").value + "\","
 				results += "\"image\": \"" + "http://www.probikekit.com/" + doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1}) img")[0].attribute("src").value + "\""
 				results += "},"
+				
 			end
 		end	
 		
@@ -132,12 +144,19 @@ get '/json/:site/:term/:number' do
 		for i in 1..params[:number].to_i do
 			# Check that there's some results
 			if (!doc.css("#listItemTitle#{i}")[0].nil?) then
+				
+				# Convert the price to AUD
+				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + doc.css(".productListItem:nth-child(#{(i*2)-1}) .price4")[0].content.gsub(/£([0-9]+\.[0-9]+) a saving of [0-9]+\.[0-9]+%/, '\1').strip + "GBP%3D%3FAUD")	
+				australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
+				
+				# Create object
 				results += "{"
 				results += "\"name\": \"" + doc.css("#listItemTitle#{i}")[0].content + "\","
-				results += "\"price\": \"" + doc.css(".productListItem:nth-child(#{(i*2)-1}) .price4")[0].content.gsub(/£([0-9]+\.[0-9]+) a saving of [0-9]+\.[0-9]+%/, '\1').strip + "\","
+				results += "\"price\": \"" + australian.to_s + "\","
 				results += "\"url\": \"" + doc.css("#listItemTitle#{i}")[0].attribute("href").value + "\","
 				results += "\"image\": \"" + doc.css("#pimage#{i}")[0].attribute("data-src").value + "\""
 				results += "},"
+				
 			end
 		end	
 		
