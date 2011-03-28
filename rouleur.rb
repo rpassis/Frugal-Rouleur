@@ -59,8 +59,15 @@ get '/json/:site/:term/:number' do
 	# Different rules for parsing the returned doc depending on the site
 	if params[:site] == "Chain Reaction" then
 
+		# For chain reaction we have to use curb because it doesn't return
+		# images if we don't specify a graphical user agent
+		connection = Curl::Easy.new
+		connection.useragent = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_7; en-us) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
+		connection.url = "http://www.chainreactioncycles.com/SearchResults.aspx?Search=" + search
+		connection.http_get
+		
 		# Parse the doc into Nokogiri
-		doc = Nokogiri::HTML(open("http://www.chainreactioncycles.com/SearchResults.aspx?Search=" + search))
+		doc = Nokogiri::HTML(connection.body_str)
 		
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do
@@ -76,7 +83,10 @@ get '/json/:site/:term/:number' do
 				results += "\"name\": \"" + doc.css("#ModelLink#{i}")[0].attribute("title").value + "\","
 				results += "\"price\": \"" + australian.to_s + "\","
 				results += "\"url\": \"" + "http://chainreactioncycles.com" + doc.css("#ModelLink#{i}")[0].attribute("href").value + "\","
-				results += "\"image\": \"" + "http://chainreactioncycles.com" + doc.css("#ModelImageLink#{i} img")[0].attribute("src").value + "\""
+				puts "============================"
+				puts doc.css("#ModelImageContainer#{i}").to_s
+				puts "============================"
+				results += "\"image\": \"" + "http://chainreactioncycles.com" + doc.css("#ModelImageContainer#{i}")[0].attribute("style").value.match(/background\-image\:url\((.+\.jpg)\);/)[1] + "\""
 				results += "},"
 				
 			end
