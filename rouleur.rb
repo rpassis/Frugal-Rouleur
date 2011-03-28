@@ -62,8 +62,10 @@ get '/json/:site/:term/:number' do
 		# For chain reaction we have to use curb because it doesn't return
 		# images if we don't specify a graphical user agent
 		connection = Curl::Easy.new
-		connection.useragent = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_7; en-us) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
-		connection.url = "http://www.chainreactioncycles.com/SearchResults.aspx?Search=" + search
+		# connection.useragent = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_7; en-us) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
+		# connection.url = "http://www.chainreactioncycles.com/SearchResults.aspx?Search=" + search
+		connection.useragent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_1 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8B117 Safari/6531.22.7"
+		connection.url = "http://www.chainreactioncycles.com/Mobile/MobileSearchResults.aspx?Search=" + search
 		connection.http_get
 		
 		# Parse the doc into Nokogiri
@@ -72,21 +74,19 @@ get '/json/:site/:term/:number' do
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do
 			# Check that there's some results
-			if (!doc.css("#ModelLink#{i}")[0].nil?) then
+			# if (!doc.css("#ModelLink#{i}")[0].nil?) then
+			if (!doc.css(".Div29")[0].nil?) then
 				
 				# Convert the price to AUD
-				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + doc.css("#ModelPrice#{i} .Label11")[0].content.gsub(/Now\302\240\302\243/, '') + "GBP%3D%3FAUD")	
+				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div12")[0].content.gsub(/Now £/, '') + "GBP%3D%3FAUD")	
 				australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
-				
+								
 				# Create object
 				results += "{"
-				results += "\"name\": \"" + doc.css("#ModelLink#{i}")[0].attribute("title").value + "\","
+				results += "\"name\": \"" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div11")[0].content + "\","
 				results += "\"price\": \"" + australian.to_s + "\","
-				results += "\"url\": \"" + "http://chainreactioncycles.com" + doc.css("#ModelLink#{i}")[0].attribute("href").value + "\","
-				puts "============================"
-				puts doc.css("#ModelImageContainer#{i}").to_s
-				puts "============================"
-				results += "\"image\": \"" + "http://chainreactioncycles.com" + doc.css("#ModelImageContainer#{i}")[0].attribute("style").value.match(/background\-image\:url\((.+\.jpg)\);/)[1] + "\""
+				results += "\"url\": \"" + "http://chainreactioncycles.com" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div11")[0].attribute("href").value.gsub(/\/Mobile\/MobileModels.aspx/, '/Models.aspx') + "\","
+				results += "\"image\": \"" + "http://chainreactioncycles.com" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div29 img")[0].attribute("src").value + "\""
 				results += "},"
 				
 			end
