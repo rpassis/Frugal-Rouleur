@@ -1,0 +1,23 @@
+!!! 5
+%html
+	%head
+		%title Frugal Rouleur - Searching for '#{@search}'
+		!= haml(:"_head", :layout => false)
+		%script{:type => "text/javascript", :charset => "utf-8", :src => "/population.js"}
+	%body
+		#home
+			%h1
+				%a{:href => "/"} Frugal Rouleur
+			%h2
+				:markdown
+					Searching for '*#{@search}*'
+			#results
+				.result{:class => "loading"}
+					%h3 Chain Reaction
+				.result{:class => "loading"}
+					%h3 Wiggle
+				.result{:class => "loading"}
+					%h3 ProBikeKit
+				.result{:class => "loading"}
+					%h3 Ribble Cycles
+			%p Prices may include VAT which would make them even cheaper that what's listed here.

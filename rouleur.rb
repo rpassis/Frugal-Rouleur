@@ -34,10 +34,10 @@ end
 get '/search/:term' do
 	
 	# The search term
-	search = params[:term];
+	@search = params[:term].gsub(/\+/, ' ');
 	
   # Render the HAML template
-  haml :home
+  haml :search
 
 end
 
