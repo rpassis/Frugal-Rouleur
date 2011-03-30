@@ -78,9 +78,9 @@ get '/json/:site/:term/:number' do
 			if (!doc.css(".Div29")[0].nil?) then
 				
 				# Convert the price to AUD
-				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div12")[0].content.gsub(/Now £/, '') + "GBP%3D%3FAUD")	
+				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div12")[0].content.gsub(/Now £|From £/, '') + "GBP%3D%3FAUD")	
 				australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
-								
+				
 				# Create object
 				results += "{"
 				results += "\"name\": \"" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div11")[0].content + "\","
@@ -91,6 +91,7 @@ get '/json/:site/:term/:number' do
 				
 			end
 		end
+		
 		
 	elsif params[:site] == "Wiggle" then
 		
@@ -171,6 +172,8 @@ get '/json/:site/:term/:number' do
 		end	
 		
 	end
+	
+	puts results
 	
 	# Check for results and return
 	if results == "{\"Results\": [" then

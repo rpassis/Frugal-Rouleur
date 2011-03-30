@@ -16,7 +16,7 @@ $(function(){
 		var result = $(this);
 		
 		// Make the AJAX call to grab the results
-		$.get("/json/" + store + "/" + search + "/1", function(data){
+		$.get("/json/" + store + "/" + search + "/3", function(data){
 			
 			// Start creating the holder
 			var html = "<table>";
