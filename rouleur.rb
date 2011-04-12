@@ -66,14 +66,16 @@ get '/json/:site/:term/:number' do
 	# Multi-word search term parsing
 	search = params[:term].gsub(/\s/, "+")
 	
+	# ========================================================================
+	# CHAIN REACTION
+	# ========================================================================
+	
 	# Different rules for parsing the returned doc depending on the site
 	if params[:site] == "Chain Reaction" then
 
 		# For chain reaction we have to use curb because it doesn't return
 		# images if we don't specify a graphical user agent
 		connection = Curl::Easy.new
-		# connection.useragent = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_7; en-us) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
-		# connection.url = "http://www.chainreactioncycles.com/SearchResults.aspx?Search=" + search
 		connection.useragent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_1 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8B117 Safari/6531.22.7"
 		connection.url = "http://www.chainreactioncycles.com/Mobile/MobileSearchResults.aspx?Search=" + search
 		connection.http_get
@@ -102,6 +104,9 @@ get '/json/:site/:term/:number' do
 			end
 		end
 		
+	# ========================================================================
+	# WIGGLE
+	# ========================================================================
 		
 	elsif params[:site] == "Wiggle" then
 		
@@ -127,7 +132,11 @@ get '/json/:site/:term/:number' do
 				
 			end
 		end	
-		
+	
+	# ========================================================================
+	# PRO BIKE KIT
+	# ========================================================================
+	
 	elsif params[:site] == "ProBikeKit" then
 		
 		# For PBK we have to use curb because we have to send the search term as a POST var
@@ -150,13 +159,24 @@ get '/json/:site/:term/:number' do
 				# Create object
 				results += "{"
 				results += "\"name\": \"" + item.css(".product-name a")[0].content + "\","
-				results += "\"price\": \"" + item.css(".price")[0].content.strip.gsub!(/AU\$/, '') + "\","
+				
+				# Sometimes the price element is different for unknown reasons
+				if (item.css(".price")[0].nil?)
+					results += "\"price\": \"" + item.css(".price_actual")[0].content.strip.gsub!(/AU\$/, '') + "\","
+				else
+					results += "\"price\": \"" + item.css(".price")[0].content.strip.gsub!(/AU\$/, '') + "\","
+				end
+				
 				results += "\"url\": \"" + item.css(".product-name a")[0].attribute("href").value + "\","
 				results += "\"image\": \"" + item.css(".product-image img")[0].attribute("src").value + "\""
 				results += "},"
 				
 			end
 		end	
+		
+	# ========================================================================
+	# RIBBLE CYCLES
+	# ========================================================================
 		
 	elsif params[:site] == "Ribble Cycles" then
 		
