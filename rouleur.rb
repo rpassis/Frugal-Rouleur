@@ -30,11 +30,21 @@ get '/' do
   haml :home
 end
 
+# Process a search perform
+post '/search' do
+	
+	# Convert the search term and redirect
+	redirect to('/search/' + params[:term].gsub(/\s/,'+'))
+	
+end
+	
+
 # Search results page
 get '/search/:term' do
 	
 	# The search term
-	@search = params[:term].gsub(/\+/, ' ');
+	@search = params[:term].gsub(/\+/, ' ')
+	@searchconcat = params[:term]
 	
   # Render the HAML template
   haml :search

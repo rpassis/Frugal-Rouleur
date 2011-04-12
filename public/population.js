@@ -10,13 +10,13 @@ $(function(){
 	$(".result").each(function(){
 		
 		// Get the store name
-		var store = $(this).find("h3").text().replace(/\s/, "+");
+		var store = $(this).find("h3 a").text().replace(/\s/, "+");
 		
 		// Set the holder for the appending of the results
 		var result = $(this);
 		
 		// Make the AJAX call to grab the results
-		$.get("/json/" + store + "/" + search + "/3", function(data){
+		$.get("/json/" + store + "/" + search + "/2", function(data){
 			
 			// Start creating the holder
 			var html = "<table>";

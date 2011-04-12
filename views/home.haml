@@ -3,19 +3,11 @@
 	%head
 		%title Frugal Rouleur
 		!= haml(:"_head", :layout => false)
-		:javascript
-			$(function(){
-				$("form").submit(function(){
-					var search = $("input[type=text]").val().replace(/\s/, "+");
-					location.replace("/search/" + search);
-					return false;
-				});
-			});
 	%body
 		#home
 			%h1
 				%a{:href => "/"} Frugal Rouleur
 			%form{:method => "post", :action => "/search"}
-				%input{:type => "text"}
+				%input{:type => "text", :name => "term"}
 				%input{:type => "submit"}
 				

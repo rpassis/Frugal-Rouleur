@@ -13,11 +13,15 @@
 					Searching for '*#{@search}*'
 			#results
 				.result{:class => "loading"}
-					%h3 Chain Reaction
+					%h3 
+						%a{:href => "http://www.chainreactioncycles.com/Mobile/MobileSearchResults.aspx?Search=#{@searchconcat}"} Chain Reaction
 				.result{:class => "loading"}
-					%h3 Wiggle
+					%h3
+						%a{:href => "http://www.wiggle.co.uk/?s=#{@searchconcat}"} Wiggle
 				.result{:class => "loading"}
-					%h3 ProBikeKit
+					%h3
+						%a{:href => "http://www.probikekit.com/au/factfinder/search/result/?q=#{@searchconcat}"} ProBikeKit
 				.result{:class => "loading"}
-					%h3 Ribble Cycles
+					%h3
+						%a{:href => "http://www.ribblecycles.co.uk/product/t/#{@searchconcat}"} Ribble Cycles
 			%p Prices may include VAT which would make them even cheaper that what's listed here.
