@@ -120,24 +120,29 @@ get '/json/:site/:term/:number' do
 		
 	elsif params[:site] == "ProBikeKit" then
 		
+		# For PBK we have to use curb because we have to send the search term as a POST var
+		connection = Curl::Easy.new
+		connection.url = "http://www.probikekit.com/au/factfinder/search/result/?q=" + search
+		connection.cookies = "geolc=aud; expires=Thu, 12-May-2011 12:58:52 GMT; path=/; domain=www.probikekit.com; httponly"
+		connection.http_get
+		
 		# Parse the doc into Nokogiri
-		doc = Nokogiri::HTML(open("http://www.probikekit.com/advsearch.php?AQUERY=" + search))
+		doc = Nokogiri::HTML(connection.body_str).css(".item")
 		
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do
 			# Check that there's some results
-			if (!doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1})")[0].nil?) then
+			if (!doc.css(".item")[0].nil?) then
 				
-				# Convert the price to AUD
-				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1}) span.nSmallNowOnly")[0].content.gsub(/Now Only £/, '') + "GBP%3D%3FAUD")	
-				australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
+				# Get the right item
+				item = doc.css(".item")[i-1]
 				
 				# Create object
 				results += "{"
-				results += "\"name\": \"" + doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1}) a.PRODLINK")[0].content + "\","
-				results += "\"price\": \"" + australian.to_s + "\","
-				results += "\"url\": \"" + "http://www.probikekit.com/" + doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1}) a.PRODLINK")[0].attribute("href").value + "\","
-				results += "\"image\": \"" + "http://www.probikekit.com/" + doc.css("form tr:nth-child(#{(i.to_f/2).round}) td[height='240']:nth-child(#{(i-1)%2 + 1}) img")[0].attribute("src").value + "\""
+				results += "\"name\": \"" + item.css(".product-name a")[0].content + "\","
+				results += "\"price\": \"" + item.css(".price")[0].content.strip.gsub!(/AU\$/, '') + "\","
+				results += "\"url\": \"" + item.css(".product-name a")[0].attribute("href").value + "\","
+				results += "\"image\": \"" + item.css(".product-image img")[0].attribute("src").value + "\""
 				results += "},"
 				
 			end
@@ -172,8 +177,6 @@ get '/json/:site/:term/:number' do
 		end	
 		
 	end
-	
-	puts results
 	
 	# Check for results and return
 	if results == "{\"Results\": [" then
