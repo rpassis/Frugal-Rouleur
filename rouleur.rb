@@ -89,8 +89,9 @@ get '/json/:site/:term/:number' do
 			# if (!doc.css("#ModelLink#{i}")[0].nil?) then
 			if (!doc.css(".Div29")[0].nil?) then
 				
-				# Convert the price to AUD
-				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div12")[0].content.gsub(/Now £|From £/, '') + "GBP%3D%3FAUD")	
+				# Remove VAT and Convert the price to AUD
+				amount = doc.css("#Form1 table:nth-of-type(#{i+1}) .Div12")[0].content.gsub(/Now £|From £/, '').to_f * 0.8
+				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + amount.to_s + "GBP%3D%3FAUD")	
 				australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
 				
 				# Create object
@@ -118,8 +119,9 @@ get '/json/:site/:term/:number' do
 			# Check that there's some results
 			if (!doc.css(".categoryListItem:nth-child(#{i})")[0].nil?) then
 				
-				# Convert the price to AUD
-				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + doc.css(".categoryListItem:nth-child(#{i}) .youpay strong")[0].content.gsub(/£/, '') + "GBP%3D%3FAUD")	
+				# Remove VAT and convert the price to AUD
+				amount = doc.css(".categoryListItem:nth-child(#{i}) .youpay strong")[0].content.gsub(/£/, '').to_f * 0.8
+				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + amount.to_s + "GBP%3D%3FAUD")	
 				australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
 				
 				# Create object
@@ -192,7 +194,8 @@ get '/json/:site/:term/:number' do
 			if (!doc.css("#listItemTitle#{i}")[0].nil?) then
 				
 				# Convert the price to AUD
-				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + doc.css(".productListItem:nth-child(#{(i*2)-1}) .price4")[0].content.gsub(/£([0-9]+\.[0-9]+) a saving of [0-9]+\.[0-9]+%/, '\1').strip + "GBP%3D%3FAUD")	
+				amount = doc.css(".productListItem:nth-child(#{(i*2)-1}) .price4")[0].content.gsub(/£([0-9]+\.[0-9]+) a saving of [0-9]+\.[0-9]+%/, '\1').strip.to_f * 0.8
+				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + amount.to_s  + "GBP%3D%3FAUD")	
 				australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
 				
 				# Create object
