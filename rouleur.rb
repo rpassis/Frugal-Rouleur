@@ -78,6 +78,7 @@ get '/json/:site/:term/:number' do
 		connection = Curl::Easy.new
 		connection.useragent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_1 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8B117 Safari/6531.22.7"
 		connection.url = "http://www.chainreactioncycles.com/Mobile/MobileSearchResults.aspx?Search=" + search
+		connection.cookies = "UserSettings=GUID=4961162a-b9f0-45d4-9741-cc7b5f9f17dc&CurrencyISO=AUD&LanguageISO=en&NavigationID=0&PartnerID=0&PollID=0&PreferredUserLanguageISO=All&VatFree=True&ShippingCountryID=1712&ShowCategoryPictures=True&ListDisplayStyle=0&SuperCategoryID=2189&UseDefaultLanguage=True&Gender=0&PartnerIDExpiry=2011-05-15 08:12:57; expires=Thu, 12-May-2012 12:58:52 GMT; path=/; domain=www.chainreactioncycles.com; httponly"
 		connection.http_get
 		
 		# Parse the doc into Nokogiri
@@ -89,15 +90,10 @@ get '/json/:site/:term/:number' do
 			# if (!doc.css("#ModelLink#{i}")[0].nil?) then
 			if (!doc.css(".Div29")[0].nil?) then
 				
-				# Remove VAT and Convert the price to AUD
-				amount = doc.css("#Form1 table:nth-of-type(#{i+1}) .Div12")[0].content.gsub(/Now £|From £/, '').to_f * 0.8
-				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + amount.to_s + "GBP%3D%3FAUD")	
-				australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
-				
 				# Create object
 				results += "{"
 				results += "\"name\": \"" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div11")[0].content + "\","
-				results += "\"price\": \"" + australian.to_s + "\","
+				results += "\"price\": \"" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div12")[0].content.gsub(/Now |From | AUD/, '') + "\","
 				results += "\"url\": \"" + "http://chainreactioncycles.com" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div11")[0].attribute("href").value.gsub(/\/Mobile\/MobileModels.aspx/, '/Models.aspx') + "\","
 				results += "\"image\": \"" + "http://chainreactioncycles.com" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div29 img")[0].attribute("src").value + "\""
 				results += "},"
