@@ -8,6 +8,10 @@
 		#home
 			%h1
 				%a{:href => "/"} Frugal Rouleur
+			#search
+				%form{:method => "post", :action => "/search"}
+					%input{:type => "text", :name => "term", :value => @search}
+					%input{:type => "submit"}
 			%h2
 				:markdown
 					Searching for '*#{@search}*'
