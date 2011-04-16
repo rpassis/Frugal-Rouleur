@@ -107,23 +107,24 @@ get '/json/:site/:term/:number' do
 		
 	elsif params[:site] == "Wiggle" then
 		
+		# User Curb so we can pass in the cookie data
+		connection = Curl::Easy.new
+		connection.url = "http://www.wiggle.co.uk/?s=" + search
+		connection.cookies = "browsingCustomer2=Name=&DType=None&CID=0&Last=15/04/2011 08:33:08&Cur=AUD&Dest=27&Language=en&SiteDomainName=wiggle.co.uk; expires=Thu, 12-May-2012 12:58:52 GMT; path=/; domain=www.wiggle.co.uk/; httponly"
+		connection.http_get
+		
 		# Parse the doc into Nokogiri
-		doc = Nokogiri::HTML(open("http://www.wiggle.co.uk/?s=" + search))
+		doc = Nokogiri::HTML(connection.body_str)
 		
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do
 			# Check that there's some results
 			if (!doc.css(".categoryListItem:nth-child(#{i})")[0].nil?) then
 				
-				# Remove VAT and convert the price to AUD
-				amount = doc.css(".categoryListItem:nth-child(#{i}) .youpay strong")[0].content.gsub(/£/, '').to_f * 0.8
-				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + amount.to_s + "GBP%3D%3FAUD")	
-				australian = (currency.string.match(/([0-9]+.[0-9]+) Australian dollars/)[1].to_f * 100).round/100.00
-				
 				# Create object
 				results += "{"
 				results += "\"name\": \"" + doc.css(".categoryListItem:nth-child(#{i}) h2 a")[0].content + "\","
-				results += "\"price\": \"" + australian.to_s + "\","
+				results += "\"price\": \"" + doc.css(".categoryListItem:nth-child(#{i}) .youpay strong")[0].content.gsub(/$/, '') + "\","
 				results += "\"url\": \"" + doc.css(".categoryListItem:nth-child(#{i}) h2 a")[0].attribute("href").value + "\","
 				results += "\"image\": \"" + doc.css(".categoryListItem:nth-child(#{i}) .productimage img")[0].attribute("src").value + "\""
 				results += "},"
