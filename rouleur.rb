@@ -182,13 +182,24 @@ get '/json/:site/:term/:number' do
 		# Multi-word search term parsing
 		search.gsub!(/\+/, "%20")
 		
+		# Create and grab the search results
+		# Unfortunuately Ribble does some weird server side thing to remember your current location and currency
+		# The change currency page returns a 301 permanent redirect which redirects properly in a browser but I 
+		# can't get Curl to do it. Oh well.
+		connection = Curl::Easy.new
+		# connection.url = "http://www.ribblecycles.co.uk/ChangeCurrency.asp?C=AUD&CC=AU&from=http://www.ribblecycles.co.uk/product/t/" + search
+		connection.url = "http://www.ribblecycles.co.uk/product/t/" + search
+		connection.http_get
+		
 		# Parse the doc into Nokogiri
-		doc = Nokogiri::HTML(open("http://www.ribblecycles.co.uk/product/t/" + search))
+		doc = Nokogiri::HTML(connection.body_str)
 		
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do
 			# Check that there's some results
 			if (!doc.css("#listItemTitle#{i}")[0].nil?) then
+				
+				puts doc.css(".productListItem:nth-child(#{(i*2)-1}) .price4")[0].content
 				
 				# Convert the price to AUD
 				amount = doc.css(".productListItem:nth-child(#{(i*2)-1}) .price4")[0].content.gsub(/£([0-9]+\.[0-9]+) a saving of [0-9]+\.[0-9]+%/, '\1').strip.to_f * 0.8
@@ -204,7 +215,7 @@ get '/json/:site/:term/:number' do
 				results += "},"
 				
 			end
-		end	
+		end	 
 		
 	end
 	
