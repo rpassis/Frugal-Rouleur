@@ -30,6 +30,12 @@ get '/' do
   haml :home
 end
 
+# About page
+get '/about' do
+  # Render the HAML template
+  haml :about
+end
+
 # Process a search perform
 post '/search' do
 	

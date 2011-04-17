@@ -15,78 +15,193 @@ html {
 		margin: 100px auto;
 	}
 }
+
+// ==========================================
+// SHARED STUFF
+
+@mixin logo {
+  font-family: "EnamelBrushRegular", Helvetica, sans-serif;
+	font-weight: normal;
+	a {
+		text-decoration: none;
+		color: #F8E272;
+		text-shadow: #F85649 6px 6px 0;
+		&:hover { color: #FFE877; }
+	}
+}
+
+@mixin search-input {
+	font-family: "Helvetica Neue", Helvetica, sans-serif;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	border: 1px solid #000;
+}
+
+@mixin search-input-text {
+	color: #BBB;
+	-moz-box-shadow: 0 0 10px #333;
+	-webkit-box-shadow: 0 0 10px #333;
+	box-shadow: 0 0 10px #333;
+}
+
+@mixin search-input-text-focus {
+	color: #383838;
+	-moz-box-shadow: 0 0 30px #F8E272;
+	-webkit-box-shadow: 0 0 30px #F8E272;
+	box-shadow: 0 0 30px #F8E272;
+}
+
+@mixin search-input-submit {
+	font-weight: bold;
+	background: #5F8246;
+	background: -moz-linear-gradient(top, #70C128 0%, #5F8246 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#70C128), color-stop(100%,#5F8246));
+	color: #2A3A1F;
+	text-shadow: #BEDCAA 0 1px 0;
+}
+
+@mixin search-input-submit-hover {
+	color: #000;
+	cursor: pointer;
+}
+
+@mixin titles {
+	font-family: "Helvetica Neue", Helvetica, sans-serif;
+}
+
 	
 // ==========================================
 // HOME
 
 .home {
 	h1 {
-		font-family: "EnamelBrushRegular", Helvetica, sans-serif;
-		font-weight: normal;
+		@include logo;
 		font-size: 140px;
 		margin: 0 0 50px 0;
-		a {
-			text-decoration: none;
-			color: #F8E272;
-			text-shadow: #F85649 6px 6px 0;
-			&:hover { color: #FFE877; }
-		}
 	}
 	form {
 		margin: 0 0 140px 0;
 		input {
-			font-family: "Helvetica Neue", Helvetica, sans-serif;
-			font-size: 22px;
-			-webkit-border-radius: 8px;
-			-moz-border-radius: 8px;
-			border-radius: 8px;
-			border: 1px solid #000;
+			@include search-input;
 			line-height: 24px;
+			font-size: 22px;
 		}
 		input[type=text] {
+			@include search-input-text;
 			height: 37px;
 			width: 400px;
 			padding: 2px 0 0 12px;
-			color: #BBB;
-			-moz-box-shadow: 0 0 10px #333;
-			-webkit-box-shadow: 0 0 10px #333;
-			box-shadow: 0 0 10px #333;
 			&:focus {
-				color: #383838;
-				-moz-box-shadow: 0 0 30px #F8E272;
-				-webkit-box-shadow: 0 0 30px #F8E272;
-				box-shadow: 0 0 30px #F8E272;
+				@include search-input-text-focus;
 			}
 		}
 		input[type=submit] {
 			height: 41px;
-			font-weight: bold;
 			padding: 5px 20px;
-			background: #5F8246;
-			background: -moz-linear-gradient(top, #70C128 0%, #5F8246 100%);
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#70C128), color-stop(100%,#5F8246));
-			color: #2A3A1F;
-			text-shadow: #BEDCAA 0 1px 0;
+			@include search-input-submit;
 			&:hover {
-				color: #000;
-				cursor: pointer;
+				@include search-input-submit-hover;
 			}
 		}
 	}
 	#explanation {
 		width: 520px;
 		margin: 0 auto;
-		font-family: "Helvetica Neue", Helvetica, sans-serif;
+		@include titles;
 		line-height: 1.6em;
 		color: #FFF;
 		opacity: 0.6;
+		-webkit-transition: all 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750); 
+		-moz-transition: all 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750); 
+		-o-transition: all 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750); 
+		transition: all 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750);
 		a {
 			color: #FFF;
 			font-weight: bold;
 			text-decoration: none;
 			&:hover {
+				color: #CCC;
+			}
+		}
+		&:hover { opacity: 1; }
+	}
+}
+
+// ==========================================
+// REGULAR PAGES
+
+.page {
+	margin: 40px auto 100px auto;
+	#header {
+		margin: 0 0 30px 0;
+		h1 {
+			@include logo;
+			font-size: 80px;
+			margin: 0 0 20px 0;
+			a {
+				text-shadow: #F85649 4px 4px 0;
+			}
+		}
+		form {
+			margin: 0 0 50px 0;
+			input {
+				@include search-input;
+				line-height: 20px;
+				font-size: 18px;
+			}
+			input[type=text] {
+				@include search-input-text;
+				height: 30px;
+				width: 300px;
+				padding: 2px 0 0 12px;
+				&:focus {
+					@include search-input-text-focus;
+				}
+			}
+			input[type=submit] {
+				height: 35px;
+				padding: 5px 20px;
+				@include search-input-submit;
+				&:hover {
+					@include search-input-submit-hover;
+				}
+			}
+		}
+	}
+	#content {
+		$shadow: #5A1916;
+		text-align: left;
+		width: 700px;
+		margin: 0 auto;
+		padding: 0 0 10px 0;
+		background: #FFF;
+		-moz-box-shadow: 0 0 50px $shadow;
+		-webkit-box-shadow: 0 0 50px $shadow;
+		box-shadow: 0 0 50px $shadow;
+		@include titles;
+		line-height: 1.6em;
+		color: #222;
+		h2 {
+			color: #000;
+			background: #DDD;
+			padding: 20px;
+			margin: 0 0 10px 0;
+			font-size: 20px;
+			font-weight: bold;
+		}
+		p {
+			padding: 0 20px 10px 20px;
+			a {
 				color: #000;
+				font-weight: bold;
+				text-decoration: none;
+				&:hover { color: #555; }
 			}
 		}
 	}
 }
+
+
+// ==========================================
+// SEARCH RESULTS
