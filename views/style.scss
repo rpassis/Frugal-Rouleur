@@ -182,6 +182,12 @@ html {
 		@include titles;
 		line-height: 1.6em;
 		color: #222;
+		a {
+			color: #0080FF;
+			text-decoration: none;
+			font-weight: bold;
+			&:hover { color: #005DB9; }
+		}
 		h2 {
 			color: #000;
 			background: #DDD;
@@ -192,12 +198,13 @@ html {
 		}
 		p {
 			padding: 0 20px 10px 20px;
-			a {
-				color: #000;
-				font-weight: bold;
-				text-decoration: none;
-				&:hover { color: #555; }
-			}
+		}
+		h3 {
+			background: #EEE;
+			padding: 10px 20px;
+			margin: 0 0 10px 0;
+			font-size: 16px;
+			font-weight: bold;
 		}
 	}
 }
@@ -205,3 +212,37 @@ html {
 
 // ==========================================
 // SEARCH RESULTS
+
+.results-page #content {
+	h2 { margin: 0; }
+	.loading {
+		height: 150px;
+		background: url(/images/loading.gif) no-repeat center 80px;
+	}
+	.result {
+		table {
+			width: 660px;
+			margin: 0 20px 20px 20px;
+			td {
+				vertical-align: middle;
+				text-align: center;
+			}
+			.pic {
+				width: 150px;
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

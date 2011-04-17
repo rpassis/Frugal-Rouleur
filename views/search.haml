@@ -3,18 +3,18 @@
 	%head
 		%title Frugal Rouleur - Searching for '#{@search}'
 		!= haml(:"_head", :layout => false)
+		%script{:type => "text/javascript", :charset => "utf-8", :src => "/scripts/form.js"}
 		%script{:type => "text/javascript", :charset => "utf-8", :src => "/scripts/population.js"}
-	%body
-		#home
+	%body{:class => "page results-page"}
+		#header
 			%h1
 				%a{:href => "/"} Frugal Rouleur
-			#search
-				%form{:method => "post", :action => "/search"}
-					%input{:type => "text", :name => "term", :value => @search}
-					%input{:type => "submit"}
+			%form{:method => "post", :action => "/search"}
+				%input{:type => "text", :name => "term", :value => @search}
+				%input{:type => "submit", :value => "Search"}
+		#content
 			%h2
-				:markdown
-					Searching for '*#{@search}*'
+				Searching for '<em>#{@search}</em>'
 			#results
 				.result{:class => "loading"}
 					%h3 

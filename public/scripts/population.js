@@ -16,7 +16,7 @@ $(function(){
 		var result = $(this);
 		
 		// Make the AJAX call to grab the results
-		$.get("/json/" + store + "/" + search + "/2", function(data){
+		$.get("/json/" + store + "/" + search + "/1", function(data){
 			
 			// If there's any results at all
 			if (data.Results != "None") {
@@ -27,19 +27,21 @@ $(function(){
 				// Loop through the results and form the HTML row
 				for (var i=0; i < data.Results.length; i++) {
 					html += "<tr>";
-					html += "<td><a href='" + data.Results[i].url + "'><img src='" + data.Results[i].image + "' alt='" + data.Results[i].name + "' /></a></td>";
-					html += "<td><a href='" + data.Results[i].url + "'>" + data.Results[i].name + "</a></td>";
-					html += "<td>AUD" + data.Results[i].price + "</td>";
+					html += "<td class='pic'><a href='" + data.Results[i].url + "'><img src='" + data.Results[i].image + "' alt='" + data.Results[i].name + "' /></a></td>";
+					html += "<td class='title'><a href='" + data.Results[i].url + "'>" + data.Results[i].name + "</a></td>";
+					html += "<td class='price'><span>AUD</span>" + data.Results[i].price + "</td>";
 					html += "</tr>";
 				};
 			
-				// Close up the HTML and append it to the page
+				// Close up the HTML, remove the loading class and append it to the page
 				html += "</table>";
+				result.removeClass("loading");
 				result.append(html);
 				
 			} else {
 				
 				// No results message
+				result.removeClass("loading");
 				result.append("<p class='noresults'>No Results");
 				
 			}

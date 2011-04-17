@@ -99,7 +99,7 @@ get '/json/:site/:term/:number' do
 				# Create object
 				results += "{"
 				results += "\"name\": \"" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div11")[0].content + "\","
-				results += "\"price\": \"" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div12")[0].content.gsub(/Now |From | AUD/, '') + "\","
+				results += "\"price\": \"" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div12")[0].content.gsub(/Now |From |AUD/, '').strip + "\","
 				results += "\"url\": \"" + "http://chainreactioncycles.com" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div11")[0].attribute("href").value.gsub(/\/Mobile\/MobileModels.aspx/, '/Models.aspx') + "\","
 				results += "\"image\": \"" + "http://chainreactioncycles.com" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div29 img")[0].attribute("src").value + "\""
 				results += "},"
@@ -130,7 +130,7 @@ get '/json/:site/:term/:number' do
 				# Create object
 				results += "{"
 				results += "\"name\": \"" + doc.css(".categoryListItem:nth-child(#{i}) h2 a")[0].content + "\","
-				results += "\"price\": \"" + doc.css(".categoryListItem:nth-child(#{i}) .youpay strong")[0].content.gsub(/$/, '') + "\","
+				results += "\"price\": \"" + doc.css(".categoryListItem:nth-child(#{i}) .youpay strong")[0].content.gsub(/\$/, '') + "\","
 				results += "\"url\": \"" + doc.css(".categoryListItem:nth-child(#{i}) h2 a")[0].attribute("href").value + "\","
 				results += "\"image\": \"" + doc.css(".categoryListItem:nth-child(#{i}) .productimage img")[0].attribute("src").value + "\""
 				results += "},"
