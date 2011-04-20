@@ -230,6 +230,19 @@ html {
 			.pic {
 				width: 150px;
 			}
+			.price {
+				width: 140px;
+				color: #36891F;
+				font-size: 24px;
+				font-weight: bold;
+				text-align: left;
+				span {
+					font-size: 14px;
+					font-weight: normal;
+					opacity: 0.6;
+					padding: 0 6px 0 0;
+				}
+			}
 		}
 	}
 }
