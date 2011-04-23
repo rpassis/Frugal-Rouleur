@@ -181,9 +181,17 @@ html {
 		h3 {
 			background: #EEE;
 			padding: 10px 20px;
-			margin: 0 0 10px 0;
+			margin: 20px 0 10px 0;
 			font-size: 16px;
 			font-weight: bold;
+			.info {
+				font-family: Menlo, Monaco, Consolas, Courier, monospace;
+				padding: 0 4px;
+				color: #53A7FF;
+				&:hover {
+					color: #333;
+				}
+			}
 		}
 	}
 }
@@ -198,6 +206,7 @@ html {
 		height: 150px;
 		background: url(/images/loading.gif) no-repeat center 80px;
 	}
+	h3 { margin: 0 0 10px 0; }
 	.result {
 		table {
 			width: 660px;
