@@ -13,6 +13,7 @@ html {
 	body {
 		width: 800px;
 		margin: 100px auto;
+		position: relative;
 	}
 }
 
@@ -264,9 +265,3 @@ html {
 		}
 		&:hover { opacity: 1; }
 	}
-
-
-
-
-
-
