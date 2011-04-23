@@ -219,7 +219,16 @@ html {
 		height: 150px;
 		background: url(/images/loading.gif) no-repeat center 80px;
 	}
+	.chainreaction h3 { background-image: url(/images/icons/chainreaction.png); }
+	.wiggle h3 { background-image: url(/images/icons/wiggle.png); }
+	.probikekit h3 { background-image: url(/images/icons/pbk.png); }
+	.ribble h3 { background-image: url(/images/icons/ribble.png); }
 	.result {
+		h3 {
+			padding: 10px 20px 10px 40px;
+			background-repeat: no-repeat;
+			background-position: 15px 14px;
+		}
 		table {
 			width: 660px;
 			margin: 0 20px 20px 20px;

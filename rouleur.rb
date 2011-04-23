@@ -205,8 +205,6 @@ get '/json/:site/:term/:number' do
 			# Check that there's some results
 			if (!doc.css("#listItemTitle#{i}")[0].nil?) then
 				
-				puts doc.css(".productListItem:nth-child(#{(i*2)-1}) .price4")[0].content
-				
 				# Convert the price to AUD
 				amount = doc.css(".productListItem:nth-child(#{(i*2)-1}) .price4")[0].content.gsub(/£([0-9]+\.[0-9]+) a saving of [0-9]+\.[0-9]+%/, '\1').strip.to_f * 0.8
 				currency = open("http://www.google.com/ig/calculator?hl=en&q=" + amount.to_s  + "GBP%3D%3FAUD")	
