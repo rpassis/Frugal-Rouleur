@@ -92,16 +92,22 @@ get '/json/:site/:term/:number' do
 		
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do
+			
+			# If there's just one result the structure is a little different
+			single_result = doc.css(".Div11").count == 1  ? true : false
+			
+			# Set the loop incrementing value
+			increment = single_result ? i : (i+1)
+			
 			# Check that there's some results
-			# if (!doc.css("#ModelLink#{i}")[0].nil?) then
-			if (!doc.css(".Div29")[0].nil?) then
-				
+			if (!doc.css("#Form1 table:nth-of-type(#{increment}) .Div11")[0].nil?) then
+
 				# Create object
 				results += "{"
-				results += "\"name\": \"" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div11")[0].content + "\","
-				results += "\"price\": \"" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div12")[0].content.gsub(/Now |From |AUD/, '').strip + "\","
-				results += "\"url\": \"" + "http://chainreactioncycles.com" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div11")[0].attribute("href").value.gsub(/\/Mobile\/MobileModels.aspx/, '/Models.aspx') + "\","
-				results += "\"image\": \"" + "http://chainreactioncycles.com" + doc.css("#Form1 table:nth-of-type(#{i+1}) .Div29 img")[0].attribute("src").value + "\""
+				results += "\"name\": \"" + doc.css("#Form1 table:nth-of-type(#{increment}) .Div11")[0].content + "\","
+				results += "\"price\": \"" + doc.css("#Form1 table:nth-of-type(#{increment}) .Div12")[0].content.gsub(/Now |From |AUD/, '').strip + "\","
+				results += "\"url\": \"" + "http://chainreactioncycles.com" + doc.css("#Form1 table:nth-of-type(#{increment}) .Div11")[0].attribute("href").value.gsub(/\/Mobile\/MobileModels.aspx/, '/Models.aspx') + "\","
+				results += "\"image\": \"" + "http://chainreactioncycles.com" + doc.css("#Form1 table:nth-of-type(#{increment}) .Div29 img")[0].attribute("src").value + "\""
 				results += "},"
 				
 			end
