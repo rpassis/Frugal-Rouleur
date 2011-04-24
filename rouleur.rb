@@ -21,7 +21,7 @@ set :haml, {:format => :html5, :escape_html => false}
 
 # Conversion of the SCSS to regular CSS
 get '/style.css' do
-  scss :style
+  # scss :style
 end
 
 # Homepage
