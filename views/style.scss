@@ -93,13 +93,15 @@ html {
 			height: 37px;
 			width: 400px;
 			padding: 2px 0 0 12px;
+			line-height: 1.5em;
 			&:focus {
 				@include search-input-text-focus;
 			}
 		}
 		input[type=submit] {
+			display: inline-block;
 			height: 41px;
-			padding: 5px 20px;
+			padding: 0 20px;
 			@include search-input-submit;
 			&:hover {
 				@include search-input-submit-hover;
