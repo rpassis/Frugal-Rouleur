@@ -54,6 +54,7 @@ $(function(){
 			error: function(xhr, status) {
 				// Timeout error
 				if (status == "timeout") {
+					result.removeClass("loading");
 					result.append("<p class='noresults'>Request timed out</p>");
 				}
 			}
