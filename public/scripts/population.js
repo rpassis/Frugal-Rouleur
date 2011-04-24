@@ -16,37 +16,48 @@ $(function(){
 		var result = $(this);
 		
 		// Make the AJAX call to grab the results
-		$.get("/json/" + store + "/" + search + "/3", function(data){
+		$.ajax({
+			type: "GET",
+			url: "/json/" + store + "/" + search + "/3",
+			dataType: "json",
+			success: function(data){
 			
-			// If there's any results at all
-			if (data.Results != "None") {
+				// If there's any results at all
+				if (data.Results != "None") {
 				
-				// Start creating the holder
-				var html = "<table>";
+					// Start creating the holder
+					var html = "<table>";
 			
-				// Loop through the results and form the HTML row
-				for (var i=0; i < data.Results.length; i++) {
-					html += "<tr>";
-					html += "<td class='pic'><a href='" + data.Results[i].url + "'><img src='" + data.Results[i].image + "' alt='" + data.Results[i].name + "' /></a></td>";
-					html += "<td class='title'><a href='" + data.Results[i].url + "'>" + data.Results[i].name + "</a></td>";
-					html += "<td class='price'><span>AUD</span>" + data.Results[i].price + "</td>";
-					html += "</tr>";
-				};
+					// Loop through the results and form the HTML row
+					for (var i=0; i < data.Results.length; i++) {
+						html += "<tr>";
+						html += "<td class='pic'><a href='" + data.Results[i].url + "'><img src='" + data.Results[i].image + "' alt='" + data.Results[i].name + "' /></a></td>";
+						html += "<td class='title'><a href='" + data.Results[i].url + "'>" + data.Results[i].name + "</a></td>";
+						html += "<td class='price'><span>AUD</span>" + data.Results[i].price + "</td>";
+						html += "</tr>";
+					};
 			
-				// Close up the HTML, remove the loading class and append it to the page
-				html += "</table>";
-				result.removeClass("loading");
-				result.append(html);
+					// Close up the HTML, remove the loading class and append it to the page
+					html += "</table>";
+					result.removeClass("loading");
+					result.append(html);
 				
-			} else {
+				} else {
 				
-				// No results message
-				result.removeClass("loading");
-				result.append("<p class='noresults'>No Results");
+					// No results message
+					result.removeClass("loading");
+					result.append("<p class='noresults'>No Results</p>");
 				
+				}
+			
+			},
+			error: function(xhr, status) {
+				// Timeout error
+				if (status == "timeout") {
+					result.append("<p class='noresults'>Request timed out</p>");
+				}
 			}
-			
-		}, "json");
+		 });
 		
 	});
 	
