@@ -24,11 +24,11 @@
 
 @font-face {
     font-family: 'EnamelBrushRegular';
-    src: url('/fonts/enamel_brush-webfont.eot');
-    src: url('/fonts/enamel_brush-webfont.eot?iefix') format('eot'),
-         url('/fonts/enamel_brush-webfont.woff') format('woff'),
-         url('/fonts/enamel_brush-webfont.ttf') format('truetype'),
-         url('/fonts/enamel_brush-webfont.svg#webfont') format('svg');
+    src: url('http://static.jimwhimpey.com/fonts/enamel-brush/enamel_brush-webfont.eot');
+    src: url('http://static.jimwhimpey.com/fonts/enamel-brush/enamel_brush-webfont.eot?iefix') format('eot'),
+         url('http://static.jimwhimpey.com/fonts/enamel-brush/enamel_brush-webfont.woff') format('woff'),
+         url('http://static.jimwhimpey.com/fonts/enamel-brush/enamel_brush-webfont.ttf') format('truetype'),
+         url('http://static.jimwhimpey.com/fonts/enamel-brush/enamel_brush-webfont.svg#webfont') format('svg');
     font-weight: normal;
     font-style: normal;
 }
