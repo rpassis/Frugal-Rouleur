@@ -1,4 +1,4 @@
-require 'darkroom'
+require 'rouleur'
 require 'sass/plugin/rack'
 
 Sass::Plugin.options[:template_location] = 'views'
