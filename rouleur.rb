@@ -17,8 +17,6 @@ end
 # Default is xhtml, do not want!
 set :haml, {:format => :html5, :escape_html => false}
 
-
-
 # Conversion of the SCSS to regular CSS
 get '/style.css' do
   scss :style
@@ -44,7 +42,6 @@ post '/search' do
 	
 end
 	
-
 # Search results page
 get '/search/:term' do
 	
@@ -237,10 +234,3 @@ get '/json/:site/:term/:number' do
 	end
 	
 end
-
-
-
-
-
-
-
