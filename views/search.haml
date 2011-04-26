@@ -15,12 +15,12 @@
 			%h2
 				Searching for '<em>#{@search}</em>'
 			#results
+				.result{:class => "loading wiggle"}
+					%h3
+						%a{:href => "http://www.awin1.com/cread.php?awinmid=1857&awinaffid=121196&clickref=&p=http%3A%2F%2Fwww.wiggle.co.uk%2F%3Fs%3D#{@searchconcat}"} Wiggle
 				.result{:class => "loading chainreaction"}
 					%h3 
 						%a{:href => "http://www.chainreactioncycles.com/Mobile/MobileSearchResults.aspx?Search=#{@searchconcat}"} Chain Reaction
-				.result{:class => "loading wiggle"}
-					%h3
-						%a{:href => "http://www.wiggle.co.uk/?s=#{@searchconcat}"} Wiggle
 				.result{:class => "loading probikekit"}
 					%h3
 						%a{:href => "http://www.probikekit.com/au/factfinder/search/result/?q=#{@searchconcat}"} ProBikeKit

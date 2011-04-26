@@ -130,11 +130,15 @@ get '/json/:site/:term/:number' do
 			# Check that there's some results
 			if (!doc.css(".categoryListItem:nth-child(#{i})")[0].nil?) then
 				
+				# Create affiliate link
+				# http://www.awin1.com/cread.php?awinmid=1857&awinaffid=121196&clickref=&p=http%3A%2F%2Fwww.wiggle.co.uk%2Fgarmin-edge-500-with-heart-rate-and-cadence%2F
+				link = "http://www.awin1.com/cread.php?awinmid=1857&awinaffid=121196&clickref=&p=" + doc.css(".categoryListItem:nth-child(#{i}) h2 a")[0].attribute("href").value.gsub(/\:/, "%3A").gsub(/\//, "%2F")
+				
 				# Create object
 				results += "{"
 				results += "\"name\": \"" + doc.css(".categoryListItem:nth-child(#{i}) h2 a")[0].content + "\","
 				results += "\"price\": \"" + doc.css(".categoryListItem:nth-child(#{i}) .youpay strong")[0].content.gsub(/\$/, '') + "\","
-				results += "\"url\": \"" + doc.css(".categoryListItem:nth-child(#{i}) h2 a")[0].attribute("href").value + "\","
+				results += "\"url\": \"" + link + "\","
 				results += "\"image\": \"" + doc.css(".categoryListItem:nth-child(#{i}) .productimage img")[0].attribute("src").value + "\""
 				results += "},"
 				
