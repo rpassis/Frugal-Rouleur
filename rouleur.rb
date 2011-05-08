@@ -179,7 +179,7 @@ get '/json/:site/:term/:number' do
 					results += "\"price\": \"" + item.css(".price")[0].content.strip.gsub!(/AU\$/, '') + "\","
 				end
 				
-				results += "\"url\": \"" + item.css(".product-name a")[0].attribute("href").value + "\","
+				results += "\"url\": \"http://scripts.affiliatefuture.com/AFClick.asp?affiliateID=252357&merchantID=4100&programmeID=10236&mediaID=0&tracking=&url=" + item.css(".product-name a")[0].attribute("href").value + "\","
 				results += "\"image\": \"" + item.css(".product-image img")[0].attribute("src").value + "\""
 				results += "},"
 				
