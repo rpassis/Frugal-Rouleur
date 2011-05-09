@@ -79,7 +79,7 @@ get '/json/:site/:term/:number' do
 		# For chain reaction we have to use curb because it doesn't return
 		# images if we don't specify a graphical user agent
 		connection = Curl::Easy.new
-		connection.useragent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_1 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8B117 Safari/6531.22.7"
+		connection.useragent = "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_1 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8B117 Safari/6531.22.7"	
 		connection.url = "http://www.chainreactioncycles.com/Mobile/MobileSearchResults.aspx?Search=" + search
 		connection.cookies = "UserSettings=GUID=4961162a-b9f0-45d4-9741-cc7b5f9f17dc&CurrencyISO=AUD&LanguageISO=en&NavigationID=0&PartnerID=0&PollID=0&PreferredUserLanguageISO=All&VatFree=True&ShippingCountryID=1712&ShowCategoryPictures=True&ListDisplayStyle=0&SuperCategoryID=2189&UseDefaultLanguage=True&Gender=0&PartnerIDExpiry=2011-05-15 08:12:57; expires=Thu, 12-May-2012 12:58:52 GMT; path=/; domain=www.chainreactioncycles.com; httponly"
 		connection.http_get
@@ -99,11 +99,15 @@ get '/json/:site/:term/:number' do
 			# Check that there's some results
 			if (!doc.css("#Form1 table:nth-of-type(#{increment}) .Div11")[0].nil?) then
 
+				# Create affiliate link
+				# http://www.awin1.com/cread.php?awinmid=2698&awinaffid=121196&clickref=&p=http%3A%2F%2Fwww.chainreactioncycles.com%2FModels.aspx%3FModelID%3D51432
+				link = "http://www.awin1.com/cread.php?awinmid=2698&awinaffid=121196&clickref=&p=http%3A%2F%2Fwww.chainreactioncycles.com" + doc.css("#Form1 table:nth-of-type(#{increment}) .Div11")[0].attribute("href").value.gsub(/\/Mobile\/MobileModels.aspx/, '/Models.aspx').gsub(/\:/, "%3A").gsub(/\//, "%2F")
+
 				# Create object
 				results += "{"
 				results += "\"name\": \"" + doc.css("#Form1 table:nth-of-type(#{increment}) .Div11")[0].content + "\","
 				results += "\"price\": \"" + doc.css("#Form1 table:nth-of-type(#{increment}) .Div12")[0].content.gsub(/Now |From |AUD/, '').strip + "\","
-				results += "\"url\": \"" + "http://chainreactioncycles.com" + doc.css("#Form1 table:nth-of-type(#{increment}) .Div11")[0].attribute("href").value.gsub(/\/Mobile\/MobileModels.aspx/, '/Models.aspx') + "\","
+				results += "\"url\": \"" + link + "\","
 				results += "\"image\": \"" + "http://chainreactioncycles.com" + doc.css("#Form1 table:nth-of-type(#{increment}) .Div29 img")[0].attribute("src").value + "\""
 				results += "},"
 				
