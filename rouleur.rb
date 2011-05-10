@@ -87,6 +87,10 @@ get '/json/:site/:term/:number' do
 		# Parse the doc into Nokogiri
 		doc = Nokogiri::HTML(connection.body_str)
 		
+		# Get the number of results found
+		num_results = doc.css("#LblProductCount")[0].content.match(/Showing [0-9]+ \- [0-9]+ of ([0-9]+) Products/)[1]
+		num_results_string = num_results.to_i == 1 ? num_results.to_s + " result" : num_results.to_s + " results"
+		
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do
 			
@@ -237,8 +241,12 @@ get '/json/:site/:term/:number' do
 	# Check for results and return
 	if results == "{\"Results\": [" then
 		return "{\"Results\": \"None\"}"
-	else	
-		return results.chop! << "]}"
+	else
+		if num_results then
+			return results.chop! << "], \"Number\": \"" + num_results + "\", \"NumberString\": \"" + num_results_string + "\"}"
+		else
+			return results.chop! << "]}"
+		end
 	end
 	
 end

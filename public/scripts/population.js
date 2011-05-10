@@ -25,6 +25,9 @@ $(function(){
 				// If there's any results at all
 				if (data.Results != "None") {
 				
+					// Append the number of results
+					result.find("h3 a:first-child").append(" <span>(" + data.NumberString + ")</span>");
+				
 					// Start creating the holder
 					var html = "<table>";
 			
