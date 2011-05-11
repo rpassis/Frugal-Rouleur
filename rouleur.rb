@@ -228,12 +228,12 @@ get '/json/:site/:term/:number' do
 		connection.url = "http://www.ribblecycles.co.uk/product/t/" + search
 		connection.http_get
 		
-		# Get the number of results found
-		# num_results = doc.css("#pager5")[0].content.match(/Showing\s+[0-9]+\s+-\s+[0-9]+\s+of\s+([0-9]+)/)[1]
-		# num_results_string = num_results.to_i == 1 ? num_results.to_s + " result" : num_results.to_s + " results"
-		
 		# Parse the doc into Nokogiri
 		doc = Nokogiri::HTML(connection.body_str)
+		
+		# Get the number of results found
+		num_results = doc.css(".productListItem").count
+		num_results_string = num_results.to_i == 1 ? num_results.to_s + " result" : num_results.to_s + " results"
 		
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do

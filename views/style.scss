@@ -210,7 +210,15 @@ html {
 		height: 150px;
 		background: url(http://static.jimwhimpey.com/images/loading.gif) no-repeat center 80px;
 	}
-	h3 { margin: 0 0 10px 0; }
+	h3 { 
+		margin: 0 0 10px 0;
+		&:first-child a span {
+			color: rgba(0,128,255,0.3);
+		}
+		&:first-child a:hover span {
+			color: rgba(0,93,185,0.6);
+		}
+	}
 	.result {
 		table {
 			width: 660px;
