@@ -133,6 +133,10 @@ get '/json/:site/:term/:number' do
 		# Parse the doc into Nokogiri
 		doc = Nokogiri::HTML(connection.body_str)
 		
+		# Get the number of results found
+		num_results = doc.css("#pager5")[0].content.match(/Showing\s+[0-9]+\s+-\s+[0-9]+\s+of\s+([0-9]+)/)[1]
+		num_results_string = num_results.to_i == 1 ? num_results.to_s + " result" : num_results.to_s + " results"
+		
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do
 			# Check that there's some results
@@ -167,6 +171,18 @@ get '/json/:site/:term/:number' do
 		
 		# Parse the doc into Nokogiri
 		doc = Nokogiri::HTML(connection.body_str).css(".item")
+		
+		# Get the number of results found, have to do some maths because PBK sucks
+		# Check if there's more than one page
+		if Nokogiri::HTML(connection.body_str).css(".pages").count > 0 then
+			# Don't want to do another HTTP call and count how many results are on the last page
+			# so I'll estimate by multipling the number of results they show per page (15) with how many pages
+			num_results = (Nokogiri::HTML(connection.body_str).css(".pager ol li").count - 1) * 15			
+		else
+			# Otherwise just count the number of results on the page
+			num_results = Nokogiri::HTML(connection.body_str).css(".product-name").count
+		end
+		num_results_string = num_results.to_i == 1 ? num_results.to_s + " result" : num_results.to_s + " results"
 		
 		# Loop through the number of items we want returned creating a little JSON object for each
 		for i in 1..params[:number].to_i do
@@ -212,6 +228,10 @@ get '/json/:site/:term/:number' do
 		connection.url = "http://www.ribblecycles.co.uk/product/t/" + search
 		connection.http_get
 		
+		# Get the number of results found
+		# num_results = doc.css("#pager5")[0].content.match(/Showing\s+[0-9]+\s+-\s+[0-9]+\s+of\s+([0-9]+)/)[1]
+		# num_results_string = num_results.to_i == 1 ? num_results.to_s + " result" : num_results.to_s + " results"
+		
 		# Parse the doc into Nokogiri
 		doc = Nokogiri::HTML(connection.body_str)
 		
@@ -243,7 +263,7 @@ get '/json/:site/:term/:number' do
 		return "{\"Results\": \"None\"}"
 	else
 		if num_results then
-			return results.chop! << "], \"Number\": \"" + num_results + "\", \"NumberString\": \"" + num_results_string + "\"}"
+			return results.chop! << "], \"Number\": \"" + num_results.to_s + "\", \"NumberString\": \"" + num_results_string + "\"}"
 		else
 			return results.chop! << "]}"
 		end
